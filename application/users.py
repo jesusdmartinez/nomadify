@@ -1,15 +1,11 @@
 from flask import Blueprint, jsonify, request, render_template
-
 from . import db
 from .models import Users
 
-
 NewUsersApi = Blueprint('new_users', __name__)
-
 
 @NewUsersApi.route('/', methods=['POST']) # can create more than one method here (e.g. POST, GET etc)
 def create_user():
-
     try:
         new_user = Users.create_user(request.json)
     except KeyError as e:
