@@ -7,7 +7,6 @@ from .messages import ChatsApi
 from .groups import GroupsApi
 from . import db
 
-
 #blueprint lives here because flask has been told so
 app.register_blueprint(HelloApi, url_prefix='/hello')
 app.register_blueprint(NewUsersApi, url_prefix='/register')
