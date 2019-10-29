@@ -1,19 +1,14 @@
 from . import db
 from datetime import datetime
 from sqlalchemy import Table, Integer, String, ForeignKey, Column, ForeignKeyConstraint
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
 
 
 group_membership_table = Table('group_membership', db.Model.metadata,
-    db.Column('group_id', db.Integer, db.ForeignKey('group_description.group_id'), nullable=False),
-    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), nullable=False),
-    db.PrimaryKeyConstraint('group_id', 'user_id')
-    )
+    db.Column('group_id', db.Integer, db.ForeignKey('group_description.group_id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id')))
 
 
-class Users(db.Model):
-
+class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer,
                    primary_key=True, autoincrement=True, nullable=False)
@@ -23,12 +18,11 @@ class Users(db.Model):
     location = db.Column(db.String(50), unique=False, nullable=True)
     profile_picture = db.Column(db.String(50), unique=False, nullable=True)
     signup_date = db.Column(db.DateTime, unique=False, nullable=False, default=datetime.utcnow)
-    groups = db.relationship('GroupDescription', secondary=group_membership_table, backref="users")
+    groups = db.relationship('GroupDescription', secondary=group_membership_table, back_populates="users")
 
-    # Why is this not auto-completing??
     @staticmethod
     def create_user(dict):
-        return Users(username=dict['username'], email=dict['email'], password_hash=dict['password_hash'], location=dict['location'])
+        return User(username=dict['username'], email=dict['email'], password_hash=dict['password_hash'], location=dict['location'])
 
     def retrieve_users(self):
         return {
@@ -45,7 +39,7 @@ class GroupDescription(db.Model):
     __tablename__ = 'group_description'
     group_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     group_name = db.Column(db.String(50), nullable=True, unique=False)                  #if group has no name, return user name instead
-    # users = db.relationship('Users', secondary=group_membership_table, back_populates="groups")
+    users = db.relationship('User', secondary=group_membership_table, back_populates="groups")
 
     @staticmethod
     def create_group(dict):
@@ -56,6 +50,7 @@ class GroupDescription(db.Model):
             'group_id': self.group_id,
            'group_name': self.group_name,
        }
+
 
 
 class Messages(db.Model):
@@ -69,6 +64,7 @@ class Messages(db.Model):
     message_content = db.Column(db.String(500), nullable=True, unique=False)
     document_link = db.Column(db.String(150), nullable=True)
     message_sentiment = db.Column(db.String(100), nullable=True)
+    user = db.relationship('User', foreign_keys=user_id)
 
     # @staticmethod
     # def create_message(dict, user_id, group_id):
@@ -76,10 +72,10 @@ class Messages(db.Model):
 
     def return_message(self):
         return {
-           'message_id': self.message_id,
-           'user_id': self.user_id,
-           'timestamp': self.timestamp,
-           'message_content': self.message_content,
-           'document_link': self.document_link,
-           'message_sentiment': self.message_sentiment
+            'message_id': self.message_id,
+            'timestamp': self.timestamp,
+            'message_content': self.message_content,
+            'document_link': self.document_link,
+            'message_sentiment': self.message_sentiment,
+            'user': self.user.retrieve_users()
        }
