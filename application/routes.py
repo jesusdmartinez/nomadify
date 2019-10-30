@@ -1,10 +1,11 @@
 from flask import current_app as app
-from flask import render_template, jsonify, flash
+from flask import render_template, jsonify, flash, request
 
 from .hello import HelloApi
 from .users import NewUsersApi
 from .messages import ChatsApi
 from .groups import GroupsApi
+from .models import User
 from . import db
 
 #blueprint lives here because flask has been told so
@@ -22,6 +23,16 @@ def hello():
 @app.route('/homescreen')
 def account_homescreen():
     return render_template('account_summary.html')
+
+# Get to the chat template
+@app.route('/chat', methods=['GET'])
+def chat():
+    user_id = request.args['user_id']
+    user = User.query.filter(User.user_id == user_id).first()
+
+    # messages = Messages.query.filter(Messages.user_id == user_id)
+
+    return render_template('chat.html', groups=user.groups, user=user)
 
 #app.route and render_template are both flask items
 

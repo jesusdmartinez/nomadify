@@ -48,6 +48,9 @@ Method for getting a list of chats for a particular user
 '''
 @ChatsApi.route('/<user_id>', methods=['GET'])
 def get_users_groups(user_id):
+    user = User.query.filter(User.user_id == user_id).first()
+    groups = user.groups
+
     group_chats = GroupDescription.query.join(User.groups).filter(User.user_id == user_id).all()
     list_of_chats = [GroupDescription.return_groups(g) for g in group_chats]
     return jsonify(list_of_chats), 200
