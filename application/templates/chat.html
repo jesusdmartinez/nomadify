@@ -105,20 +105,8 @@
             </div>
             <div id="convo-wrap">
 
-<!--                <div class="convo active">-->
-<!--                    <div class="head-img-wrap">-->
-<!--                        <img class="icon-img" src="static/images/pup3.png" alt="">-->
-<!--                    </div>-->
-<!--                    <div class="convo-info">-->
-<!--                        <div class="convo-title">-->
-<!--                            <div class="convo-name">Travis Barker</div>-->
-<!--                            <div class="convo-date">10/12/2019</div>-->
-<!--                        </div>-->
-<!--                        <div class="convo-last-mssg">-->
-<!--                            <p class="mssg">Lets go to the Mall, Today!</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+
+
 
                 {% for chat in groups %}
                 <div class="convo" data-chat_id="{{chat.group_id}}" data-user_id="{{user.user_id}}">
@@ -128,18 +116,22 @@
                     <div class="convo-info">
                         <div class="convo-title">
                             <div class="convo-name">{{chat.group_name}}</div>
-                                <div class="convo-date">To Be Determined</div>
+                                <div class="convo-date">TBD</div>
                         </div>
                         <div class="convo-last-mssg">
-                            <p class="mssg">To Be Determined</p>
+                            <p class="mssg">To be determined</p>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
 
 
+
             </div>
         </div>
+
+
+
         <div id="main-chat">
             <div id="main-chat-wrap">
             </div>
@@ -155,10 +147,12 @@
                     <div id="new-mssg-bubble" class="chat-bubble">
                         <form id="new-message-form" name="new-message-form">
                             <input type="text" name="message" id="new-message" placeholder="Type a message">
+                            <input type="hidden" name="user_id" id="sndr-name" value="{{user.user_id}}">
+                            <input type="hidden" name="chat_id" id="sndr-chat_id" value="">
                         </form>
                     </div>
                 </div>
-                <button data-click="send-message" class="svg-wrap" onclick="submitNewMessage()">
+                <button id="myBtn" data-click="send-message" class="svg-wrap" onclick="submitNewMessage()">
                     <svg id="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                         <path fill="#263238" fill-opacity=".45"
                             d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z">

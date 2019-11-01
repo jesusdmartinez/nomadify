@@ -20,6 +20,7 @@ class User(db.Model):
     signup_date = db.Column(db.DateTime, unique=False, nullable=False, default=datetime.utcnow)
     groups = db.relationship('GroupDescription', secondary=group_membership_table, back_populates="users")
 
+
     @staticmethod
     def create_user(dict):
         return User(username=dict['username'], email=dict['email'], password_hash=dict['password_hash'], location=dict['location'])
@@ -50,7 +51,6 @@ class GroupDescription(db.Model):
             'group_id': self.group_id,
            'group_name': self.group_name,
        }
-
 
 
 class Messages(db.Model):

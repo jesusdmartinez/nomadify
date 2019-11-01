@@ -19,7 +19,7 @@ def post_message(group_id):
 
     db.session.add(new_message)
     db.session.commit()
-    return jsonify(), 200
+    return jsonify(new_message.return_message()), 200
 
 
 # http://0.0.0.0:5000/api/chats/2/messages?user_id=9&
@@ -37,7 +37,7 @@ def get_messages(group_id):
     #however in the future we may want to put a forbidden message here. e.g. if the user accessing is doesn't have a user id already in the group, don't let them
     #access the messages!!
     '''
-    group_messages = Messages.query.filter(Messages.group_id == group_id).all()
+    group_messages = Messages.query.filter(Messages.group_id == group_id).order_by(desc(Messages.timestamp)).all()
     new_list = [Messages.return_message(message) for message in group_messages]
     return jsonify(new_list), 200
 
