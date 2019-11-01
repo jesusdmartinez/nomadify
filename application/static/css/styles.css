@@ -109,7 +109,7 @@ img.icon-img {
 ***************** */
 #sidebar {
     /* height: 100%; */
-    width: 35%;
+    width: 45%;
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -288,7 +288,7 @@ p.mssg {
 .message.out {
     background-color: #dcf8c6;
     align-self: flex-end;
-    /* text-align: right */
+    text-align: right
 }
 
 .message.out .mssg-pointer {
