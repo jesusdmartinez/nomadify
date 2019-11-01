@@ -15,6 +15,7 @@ const convoClick = (event) => {
     // populate chat_id into the #sndr-chat
     document.querySelector('#sndr-chat_id').value = chat_id;
     retrieveMessages(clickedElement.dataset);
+
 }
 
 
@@ -51,6 +52,7 @@ const addMessages = (messages) => {
 
     // create a new wrapper for each message
 const createMessageWrappers = (message) => {
+
     let message_wrap = document.createElement('div') //<div>
     message_wrap.classList.add('message-wrap'); //<div class="message-wrap"> //
 
@@ -82,7 +84,8 @@ const createMessageWrappers = (message) => {
 }
 
 
-const submitNewMessage = () => {
+const submitNewMessage = (e) => {
+    e.preventDefault();
 
     // collect data needed for message POST request
     const newMessage = document.querySelector('#new-message').value;
@@ -107,19 +110,29 @@ const submitNewMessage = () => {
 
         createMessageWrappers(data)
         document.querySelector('#new-message').value = '';
+        scrollMyMessage()
         document.querySelector(`div.convo[data-chat_id="${chat_id}"] p.mssg`).innerHTML = data.message_content
     })
 }
 
+function scrollMyMessage() {
+    let div = document.getElementById('main-chat-wrap');
+    div.scrollTop = div.scrollHeight - div.clientHeight;
+}
+setInterval(scrollMyMessage, 500);
 
-let input = document.getElementById("#new-message");
-console.log(input)
-input.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-   event.preventDefault();
-   document.getElementById("myBtn").click();
-  }
-});
+
+
+//main-chat-wrap.scrollTo(0,document.body.scrollHeight);
+
+//function scrollToBottom(#main-chat-wrap){
+//   var div = document.getElementById(#main-chat-wrap);
+//   div.scrollTop = div.scrollHeight - div.clientHeight;
+//}
+
+//var element = document.querySelector(".element-selector");
+//element.scrollIntoView();
+
 
 
 
