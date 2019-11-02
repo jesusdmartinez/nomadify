@@ -1,22 +1,34 @@
 
+let currentChatId = null;
+let currentUserId = null;
+
 
 const convoClick = (event) => {
-
     // get the element that was clicked, this information is given to us in the click event; retrieve data- attributes
+    // get the chat_id value from the dataset of clickedElement
+    // populate chat_id into the #sndr-chat
+
     const clickedElement = event.currentTarget;
     Array.from(document.getElementsByClassName('convo')).forEach(x => x.classList.remove('active'))
-
     clickedElement.classList.add('active');
     const dataAttributes = clickedElement.dataset
-
-    //get the chat_id value from the dataset of clickedElement
     const chat_id = dataAttributes.chat_id
-
-    // populate chat_id into the #sndr-chat
+    const user_id = dataAttributes.user_id
     document.querySelector('#sndr-chat_id').value = chat_id;
-    retrieveMessages(clickedElement.dataset);
+    currentChatId = chat_id;
+    currentUserId = user_id;
+
+    retrieveMessages(currentChatId, currentUserId);
 
 }
+
+
+setInterval(() => {
+    if(currentChatId !== null && currentUserId !== null) {
+    retrieveMessages(currentChatId, currentUserId)
+
+    }
+}, 2000);
 
 
     // looks for all "convo" classes, and adds an "eventlistener"; then if there is a "click" it runs convoClick
@@ -25,9 +37,9 @@ for(let element of document.getElementsByClassName("convo")) {
 }
 
 
-    // gets JSON, then translates to JS, then runs addMessage function (with JS)
-const retrieveMessages = (req_info) => {
-    const url = `/api/chats/${req_info.chat_id}/messages?user_id=${req_info.user_id}`
+    // gets JSON, then translates to JS, then runs addMessage function (with JS); get API request and put infront of message.
+const retrieveMessages = (chat_id, user_id) => {
+    const url = `/api/chats/${chat_id}/messages?user_id=${user_id}`
     fetch(url, {
         method: 'GET'
     })
@@ -47,7 +59,6 @@ const addMessages = (messages) => {
         createMessageWrappers(message)
     }
 }
-
 
 
     // create a new wrapper for each message
@@ -119,7 +130,51 @@ function scrollMyMessage() {
     let div = document.getElementById('main-chat-wrap');
     div.scrollTop = div.scrollHeight - div.clientHeight;
 }
-setInterval(scrollMyMessage, 500);
+setInterval(scrollMyMessage, 2000);
+
+
+/////////////////////////////
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+
+
+const createGroup = (event) => {
+    event.preventDefault();
+
+    // collect data needed for message POST request
+    const group_name = document.querySelector('#group-name').value;
+    const group_user_ids = document.querySelector('#group-user-ids').value;
+
+    // make POST request to create the message
+    const url = `/api/new_group/`;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "group_name": group_name,
+            "user_ids": group_user_ids
+        })
+    })
+
+}
+//    .then(res => {
+//        return res.json()
+//    })
+//    .then(data => {
+//
+//        createMessageWrappers(data)
+//        document.querySelector('#new-message').value = '';
+//        scrollMyMessage()
+//        document.querySelector(`div.convo[data-chat_id="${chat_id}"] p.mssg`).innerHTML = data.message_content
+//    })
+
 
 
 
