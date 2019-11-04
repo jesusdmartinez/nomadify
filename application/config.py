@@ -17,6 +17,13 @@ class Config(object):
     db_password = os.environ['DB_PASSWORD']
     SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://root:{db_password}@localhost/nomadify'
 
+    db_host = os.environ.get('DB_HOST', 'localhost')
+    db_user = os.environ.get('DB_USERNAME', 'jesusdmartinez')
+    db_schema = os.environ.get('DB_SCHEMA', 'nomadify')
+    db_password = os.environ.get('DB_PASSWORD')
+    # print(db_password)
+    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_schema}'
+
 
 class ProductionConfig(Config):
     DEBUG = False
@@ -34,3 +41,5 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+
+
