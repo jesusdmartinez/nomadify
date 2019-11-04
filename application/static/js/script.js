@@ -148,7 +148,8 @@ const createGroup = (event) => {
 
     // collect data needed for message POST request
     const group_name = document.querySelector('#group-name').value;
-    const group_user_ids = document.querySelector('#group-user-ids').value;
+    const group_user_ids = document.querySelector('#group-user-ids').value.split(',').map(x => parseInt(x, 10));
+
 
     // make POST request to create the message
     const url = `/api/new_group/`;
@@ -162,8 +163,8 @@ const createGroup = (event) => {
             "user_ids": group_user_ids
         })
     })
-
 }
+
 //    .then(res => {
 //        return res.json()
 //    })
